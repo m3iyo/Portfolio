@@ -28,7 +28,7 @@ class JwtAuthFilter implements FilterInterface
             return redirect()->to(site_url("admin"));
         }
 
-        $claims = $jwtService->decodeToken($token);
+        $claims = $jwtService->decodeToken($token); 
         if ($claims === null) {
             $response = redirect()->to(site_url("/"));
             $response->deleteCookie($jwtConfig->getCookieName());

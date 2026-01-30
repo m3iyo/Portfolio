@@ -10,7 +10,16 @@ $textareaFields = [
     "setting_value",
     "highlight",
     "description",
+    "message",
 ];
+$isDeleteOnlyTable = $table === "contact_messages";
+$displayFields = $fields;
+if ($isDeleteOnlyTable) {
+    $displayFields = array_values(array_filter(
+        $fields,
+        static fn (string $field): bool => $field !== "updated_at"
+    ));
+}
 ?>
 <?= $this->extend("layouts/admin") ?>
 <?= $this->section("content") ?>
@@ -21,17 +30,22 @@ $textareaFields = [
       <div class="level-left">
         <div>
           <h1 class="title is-4 mb-1"><?= esc($table) ?></h1>
-          <p class="subtitle is-6">Create, update, or delete records</p>
+          <p class="subtitle is-6">
+            <?= $isDeleteOnlyTable ? "Delete records only" : "Create, update, or delete records" ?>
+          </p>
         </div>
       </div>
       <div class="level-right">
+        <?php if (!$isDeleteOnlyTable): ?>
         <button class="button is-rounded btn-outline btn-cta mr-2" type="button" data-toggle="add-form">
           Add
         </button>
+        <?php endif; ?>
         <a class="button is-rounded btn-outline btn-cta" href="<?= site_url("admin/dashboard") ?>">Back</a>
       </div>
     </div>
 
+    <?php if (!$isDeleteOnlyTable): ?>
     <div class="box admin-card is-hidden" id="addForm">
       <h2 class="title is-6">Add New</h2>
       <form method="post" action="<?= site_url("admin/table/" . $table . "/create") ?>">
@@ -117,11 +131,16 @@ $textareaFields = [
                     "setting_key" => "cta_title",
                     "setting_value" => "Contact",
                 ],
+                "contact_messages" => [
+                    "name" => "Jane Doe",
+                    "email" => "jane@example.com",
+                    "message" => "Hello! I would like to connect about a project.",
+                ],
             ];
             $placeholders = $tablePlaceholders[$table] ?? [];
             ?>
             <div class="columns is-multiline">
-          <?php foreach ($fields as $field): ?>
+          <?php foreach ($displayFields as $field): ?>
             <?php if ($field === "id"): ?>
               <?php continue; ?>
             <?php endif; ?>
@@ -141,6 +160,7 @@ $textareaFields = [
         </div>
       </form>
     </div>
+    <?php endif; ?>
 
     <div class="box admin-card">
       <h2 class="title is-6">Existing Records</h2>
@@ -148,7 +168,7 @@ $textareaFields = [
         <table class="table is-fullwidth admin-table">
           <thead>
             <tr>
-              <?php foreach ($fields as $field): ?>
+              <?php foreach ($displayFields as $field): ?>
                 <th><?= esc($field) ?></th>
               <?php endforeach; ?>
               <th>Actions</th>
@@ -157,7 +177,7 @@ $textareaFields = [
           <tbody>
             <?php if (empty($rows)): ?>
               <tr>
-                <td colspan="<?= count($fields) + 1 ?>">No records found.</td>
+                <td colspan="<?= count($displayFields) + 1 ?>">No records found.</td>
               </tr>
             <?php else: ?>
               <?php foreach ($rows as $row): ?>
@@ -167,28 +187,36 @@ $textareaFields = [
                   <?= csrf_field() ?>
                 </form>
                 <tr data-row>
-                  <?php foreach ($fields as $field): ?>
+                  <?php foreach ($displayFields as $field): ?>
                     <?php $value = $row[$field] ?? ""; ?>
                     <td>
                       <?php $placeholder = $placeholders[$field] ?? ("Enter " . $field); ?>
                       <?php if ($field === "id"): ?>
                         <input class="input is-small" type="text" name="id" value="<?= esc($value) ?>" readonly form="<?= esc($formId) ?>" />
                       <?php elseif (in_array($field, $textareaFields, true)): ?>
-                        <textarea class="textarea is-small" name="<?= esc($field) ?>" rows="2" form="<?= esc($formId) ?>" disabled placeholder="<?= esc($placeholder) ?>"><?= esc($value) ?></textarea>
+                        <textarea class="textarea is-small" name="<?= esc($field) ?>" rows="2" form="<?= esc($formId) ?>"<?= $isDeleteOnlyTable ? " readonly" : " disabled" ?> placeholder="<?= esc($placeholder) ?>"><?= esc($value) ?></textarea>
                       <?php else: ?>
-                        <input class="input is-small" type="text" name="<?= esc($field) ?>" value="<?= esc($value) ?>" form="<?= esc($formId) ?>" disabled placeholder="<?= esc($placeholder) ?>" />
+                        <input class="input is-small" type="text" name="<?= esc($field) ?>" value="<?= esc($value) ?>" form="<?= esc($formId) ?>"<?= $isDeleteOnlyTable ? " readonly" : " disabled" ?> placeholder="<?= esc($placeholder) ?>" />
                       <?php endif; ?>
                     </td>
                   <?php endforeach; ?>
                   <td class="admin-actions">
                     <div class="buttons">
+                      <?php if (!$isDeleteOnlyTable): ?>
                       <button class="button is-rounded btn-outline btn-cta is-small" type="button" data-edit="<?= esc($formId) ?>">
                         Edit
                       </button>
                       <button class="button is-rounded btn-outline btn-cta is-small is-hidden" type="submit" form="<?= esc($formId) ?>" data-save="<?= esc($formId) ?>">
                         Save
                       </button>
-                      <form method="post" action="<?= site_url("admin/table/" . $table . "/delete") ?>" onsubmit="return confirm('Delete this record?');" class="is-hidden" data-delete="<?= esc($formId) ?>">
+                      <?php endif; ?>
+                      <form
+                        method="post"
+                        action="<?= site_url("admin/table/" . $table . "/delete") ?>"
+                        onsubmit="return confirm('Delete this record?');"
+                        class="<?= $isDeleteOnlyTable ? "" : "is-hidden" ?>"
+                        data-delete="<?= esc($formId) ?>"
+                      >
                         <?= csrf_field() ?>
                         <input type="hidden" name="id" value="<?= esc($row["id"] ?? "") ?>" />
                         <button class="button is-rounded btn-outline btn-cta is-small" type="submit">Delete</button>

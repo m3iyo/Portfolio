@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
+$routes->post("contact", "Home::contact");
 $routes->match(['GET', 'POST'], 'admin', 'Admin::login');
 $routes->get('admin/logout', 'Admin::logout');
 $routes->get('admin/dashboard', 'Admin::dashboard');

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\JwtService;
+use App\Models\ContactMessageModel;
 use App\Models\EducationModel;
 use App\Models\ProfileModel;
 use App\Models\ProfileTagModel;
@@ -15,6 +16,7 @@ use App\Models\SiteSettingModel;
 use App\Models\SkillGroupModel;
 use App\Models\SkillModel;
 use App\Models\SocialLinkModel;
+use CodeIgniter\HTTP\RedirectResponse;
 use Config\JWT as JwtConfig;
 
 class Home extends BaseController
@@ -31,7 +33,9 @@ class Home extends BaseController
 
         $session = session();
         $adminError = $session->getFlashdata("admin_error");
-        $adminDebug = $session->getFlashdata("admin_debug");
+        $contactSuccess = $session->getFlashdata("contact_success");
+        $contactError = $session->getFlashdata("contact_error");
+        $contactOld = $session->getFlashdata("contact_old");
         $adminErrorQuery = $this->request->getGet("admin_error");
         /** @var JwtConfig $jwtConfig */
         $jwtConfig = config("JWT");
@@ -130,8 +134,67 @@ class Home extends BaseController
             "education" => $education,
             "settings" => $settings,
             "adminError" => $adminError,
-            "adminDebug" => $adminDebug,
+            "contactSuccess" => $contactSuccess,
+            "contactError" => $contactError,
+            "contactOld" => is_array($contactOld) ? $contactOld : [],
             "isAdmin" => $isAdmin,
         ]);
+    }
+
+    /**
+     * Persist a contact form submission into the database.
+     *
+     * @return RedirectResponse
+     */
+    public function contact(): RedirectResponse
+    {
+        // Enforce POST-only access for submissions.
+        if ($this->request->getMethod(true) !== "POST") {
+            return redirect()->to(site_url("/"));
+        }
+
+        $name = trim((string) $this->request->getPost("name"));
+        $email = trim((string) $this->request->getPost("email"));
+        $message = trim((string) $this->request->getPost("message"));
+
+        $payload = [
+            "name" => $name,
+            "email" => $email,
+            "message" => $message,
+        ];
+
+        // Validate required fields and email format.
+        $validation = service("validation");
+        $validation->setRules([
+            "name" => "required|min_length[2]|max_length[120]",
+            "email" => "required|valid_email|max_length[255]",
+            "message" => "required|min_length[5]",
+        ]);
+
+        if (!$validation->run($payload)) {
+            session()->setFlashdata("contact_error", implode(" ", $validation->getErrors()));
+            session()->setFlashdata("contact_old", $payload);
+            $redirectUrl = sprintf("%s#cta", site_url("/"));
+            return redirect()->to($redirectUrl);
+        }
+
+        $messageModel = new ContactMessageModel();
+
+        try {
+            // Persist the validated message.
+            $messageModel->insert($payload);
+        } catch (\Throwable $exception) {
+            log_message("error", "Contact message save failed: {message}", [
+                "message" => $exception->getMessage(),
+            ]);
+            session()->setFlashdata("contact_error", "Unable to save your message. Please try again.");
+            session()->setFlashdata("contact_old", $payload);
+            $redirectUrl = sprintf("%s#cta", site_url("/"));
+            return redirect()->to($redirectUrl);
+        }
+
+        session()->setFlashdata("contact_success", "Thanks for reaching out. Have a nice day!");
+        $redirectUrl = sprintf("%s#cta", site_url("/"));
+        return redirect()->to($redirectUrl);
     }
 }

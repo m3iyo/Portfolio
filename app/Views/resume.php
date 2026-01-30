@@ -277,6 +277,7 @@
                 <p class="subtitle is-6 has-text-centered">
                   <?= esc($settings["cta_subtitle"] ?? "Let’s build something meaningful together") ?>
                 </p>
+
               </div>
 
               <div class="box has-text-centered">
@@ -292,15 +293,6 @@
                     aria-label="Facebook"
                   >
                     <img class="skill-icon" src="https://cdn.simpleicons.org/facebook/ffffff" alt="Facebook" />
-                  </a>
-                  <a
-                    class="button is-rounded btn-outline btn-cta"
-                    href="https://mail.google.com/mail/?view=cm&fs=1&to=<?= rawurlencode($settings["cta_gmail_email"] ?? "hello@example.com") ?>"
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="Gmail"
-                  >
-                    <img class="skill-icon" src="https://cdn.simpleicons.org/gmail/ffffff" alt="Gmail" />
                   </a>
                   <a
                     class="button is-rounded btn-outline btn-cta"
@@ -321,22 +313,33 @@
                   <form
                     id="contactForm"
                     class="contact-form"
-                    data-email-to="<?= esc($settings["cta_gmail_email"] ?? "hello@example.com") ?>"
+                    method="post"
+                    action="<?= site_url("contact") ?>"
                     novalidate
                   >
-                    <div id="contactFormError" class="notification is-danger is-light is-hidden" role="status" aria-live="polite"></div>
+                    <?= csrf_field() ?>
+                    <?php if (!empty($contactSuccess)): ?>
+                      <div class="notification is-success is-light" role="status" aria-live="polite">
+                        <?= esc($contactSuccess) ?>
+                      </div>
+                    <?php endif; ?>
+                    <?php if (!empty($contactError)): ?>
+                      <div class="notification is-danger is-light" role="status" aria-live="polite">
+                        <?= esc($contactError) ?>
+                      </div>
+                    <?php endif; ?>
                     <div class="columns is-variable is-5">
                       <div class="column is-6">
                         <div class="field">
                           <label class="label">Name</label>
                           <div class="control">
-                            <input class="input" type="text" name="name" placeholder="Your name" required />
+                            <input class="input" type="text" name="name" placeholder="Your name" value="<?= esc($contactOld["name"] ?? "") ?>" required />
                           </div>
                         </div>
                         <div class="field">
                           <label class="label">Email</label>
                           <div class="control">
-                            <input class="input" type="email" name="email" placeholder="you@example.com" required />
+                            <input class="input" type="email" name="email" placeholder="you@example.com" value="<?= esc($contactOld["email"] ?? "") ?>" required />
                           </div>
                         </div>
                       </div>
@@ -344,7 +347,7 @@
                         <div class="field">
                           <label class="label">Message</label>
                           <div class="control">
-                            <textarea class="textarea" name="message" rows="6" placeholder="Write your message..." required></textarea>
+                            <textarea class="textarea" name="message" rows="6" placeholder="Write your message..." required><?= esc($contactOld["message"] ?? "") ?></textarea>
                           </div>
                         </div>
                       </div>
@@ -537,100 +540,6 @@
           });
         });
 
-        /**
-         * Initialize the contact form mailto behavior.
-         * @returns {void}
-         */
-        const initContactForm = () => {
-          /** @type {HTMLFormElement|null} */
-          const form = document.getElementById("contactForm");
-          if (!form) {
-            return;
-          }
-
-          /** @type {HTMLElement|null} */
-          const errorBox = document.getElementById("contactFormError");
-          /** @type {HTMLInputElement|null} */
-          const nameInput = form.querySelector("input[name=\"name\"]");
-          /** @type {HTMLInputElement|null} */
-          const emailInput = form.querySelector("input[name=\"email\"]");
-          /** @type {HTMLTextAreaElement|null} */
-          const messageInput = form.querySelector("textarea[name=\"message\"]");
-          /** @type {string} */
-          const emailTo = form.getAttribute("data-email-to") || "hello@example.com";
-
-          if (!nameInput || !emailInput || !messageInput) {
-            return;
-          }
-
-          /**
-           * Show a validation error in the UI.
-           * @param {string} message
-           * @returns {void}
-           */
-          const showError = (message) => {
-            if (!errorBox) {
-              return;
-            }
-            errorBox.textContent = message;
-            errorBox.classList.remove("is-hidden");
-          };
-
-          /**
-           * Clear any validation error in the UI.
-           * @returns {void}
-           */
-          const clearError = () => {
-            if (!errorBox) {
-              return;
-            }
-            errorBox.textContent = "";
-            errorBox.classList.add("is-hidden");
-          };
-
-          form.addEventListener("submit", (event) => {
-            event.preventDefault();
-
-            const name = nameInput.value.trim();
-            const email = emailInput.value.trim();
-            const message = messageInput.value.trim();
-            const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-
-            if (name === "" || email === "" || message === "") {
-              showError("Please fill out your name, email, and message.");
-              return;
-            }
-            if (!emailPattern.test(email)) {
-              showError("Please enter a valid email address.");
-              return;
-            }
-
-            clearError();
-
-            try {
-              const subject = `Portfolio inquiry from ${name}`;
-              const body = [
-                `Name: ${name}`,
-                `Email: ${email}`,
-                "",
-                message,
-              ].join("\n");
-              const gmailParams = new URLSearchParams({
-                view: "cm",
-                fs: "1",
-                to: emailTo,
-                subject,
-                body,
-              });
-              const gmailUrl = `https://mail.google.com/mail/?${gmailParams.toString()}`;
-              window.open(gmailUrl, "_blank", "noopener,noreferrer");
-            } catch (error) {
-              showError("Unable to open the email client. Please try again.");
-            }
-          });
-        };
-
-        initContactForm();
       });
     </script>
 

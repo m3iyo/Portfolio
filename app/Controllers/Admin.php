@@ -29,6 +29,7 @@ class Admin extends BaseController
         "project_docs",
         "education",
         "site_settings",
+        "contact_messages",
     ];
 
     /**
@@ -55,15 +56,6 @@ class Admin extends BaseController
             $adminConfig = config("Admin");
             $isValidUser = hash_equals($adminConfig->getUsername(), $username);
             $isValidPass = $adminConfig->verifyPassword($password);
-            log_message(
-                "debug",
-                "Admin login attempt. user_ok={user_ok} pass_ok={pass_ok} env_user={env_user}",
-                [
-                    "user_ok" => $isValidUser ? "1" : "0",
-                    "pass_ok" => $isValidPass ? "1" : "0",
-                    "env_user" => (string) env("ADMIN_USERNAME"),
-                ]
-            );
 
             if ($isValidUser && $isValidPass) {
                 // Issue a short-lived JWT when credentials are valid.
@@ -131,6 +123,7 @@ class Admin extends BaseController
             "Projects" => ["projects", "project_tags", "project_highlights", "project_links", "project_docs"],
             "Education" => ["education"],
             "Settings" => ["site_settings"],
+            "Messages" => ["contact_messages"],
         ];
 
         return view("admin/dashboard", [

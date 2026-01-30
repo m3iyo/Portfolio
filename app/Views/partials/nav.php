@@ -27,7 +27,7 @@
       <div class="navbar-end">
         <a class="navbar-item" href="#skills">skills</a>
         <a class="navbar-item" href="#projects">projects</a>
-        <a class="navbar-item" href="#cta">contacts</a>
+        <a class="navbar-item" href="#cta">contact</a>
         <a class="navbar-item" href="#education">education</a>
         <?php if (!empty($isAdmin)): ?>
           <a class="navbar-item" href="<?= site_url("admin/dashboard") ?>">admin</a>
