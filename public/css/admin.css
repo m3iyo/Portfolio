@@ -1,0 +1,87 @@
+:root {
+  --admin-input-bg: rgba(255, 255, 255, 0.06);
+  --admin-input-border: rgba(255, 255, 255, 0.18);
+  --admin-text: rgba(255, 255, 255, 0.92);
+  --admin-muted: rgba(255, 255, 255, 0.7);
+}
+
+.admin-section {
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+.admin-modal .modal-card {
+  width: min(560px, 92vw);
+}
+
+.admin-modal .modal-card-head {
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-modal .modal-card-title {
+  color: #fff;
+}
+
+.admin-modal .modal-card-body {
+  background: rgba(10, 10, 14, 0.8);
+}
+
+.admin-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.admin-muted {
+  color: var(--admin-muted);
+}
+
+.admin-table {
+  background: transparent;
+  color: var(--admin-text);
+}
+
+.admin-table th,
+.admin-table td {
+  color: var(--admin-text);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.admin-card .admin-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-actions .buttons {
+  gap: 8px;
+}
+
+.input,
+.textarea,
+.select select {
+  background: var(--admin-input-bg);
+  border-color: var(--admin-input-border);
+  color: var(--admin-text);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.input:focus,
+.textarea:focus,
+.select select:focus {
+  border-color: rgba(120, 160, 255, 0.6);
+  box-shadow: 0 0 0 0.1em rgba(120, 160, 255, 0.2);
+}
+
+.label {
+  color: var(--admin-text);
+}
+
+.notification.is-danger.is-light {
+  background: rgba(255, 77, 77, 0.15);
+  color: #ffd1d1;
+}

@@ -1,0 +1,339 @@
+:root{
+  --bg-0:#0b0b12;
+  --bg-1:#10101a;
+  --panel: rgba(255,255,255,0.06);
+  --panel-2: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.12);
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.70);
+  --muted2: rgba(255,255,255,0.55);
+  --accent:#f4c556;
+  --accent2: rgba(96, 140, 255, 1);
+
+  --section-gap: 5rem;
+  --section-gap-sm: 3.25rem;
+
+  --hero-gap: 4.75rem;
+}
+
+html, body { background: var(--bg-0); }
+body {
+  color: var(--text);
+  background:
+    radial-gradient(900px 500px at 75% 20%, rgba(123, 97, 255, 0.25), rgba(0, 0, 0, 0)),
+    radial-gradient(700px 450px at 20% 60%, rgba(66, 194, 255, 0.14), rgba(0, 0, 0, 0)),
+    linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
+}
+
+.title { color: #fff; }
+.subtitle { color: var(--muted); }
+.has-text-grey, .has-text-grey-light { color: var(--muted) !important; }
+.content, .content p, .content li { color: var(--muted); }
+a { color: rgba(120,160,255,0.95); }
+a:hover { color: #fff; }
+
+.tag a { color: inherit; }
+.skills-list { display: inline-block; text-align: left; }
+.skill-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* ===== Navbar ===== */
+.custom-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: rgba(10, 10, 14, 0.70);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.custom-navbar .navbar-item,
+.custom-navbar .navbar-link {
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.85);
+}
+.custom-navbar .navbar-item:hover,
+.custom-navbar .navbar-link:hover {
+  background: transparent;
+  color: #ffffff;
+}
+.custom-navbar .brand-text {
+  font-weight: 700;
+  color: #ffffff;
+}
+.custom-navbar .navbar-burger span {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+.custom-navbar .navbar-menu {
+  background: rgba(10, 10, 14, 0.92);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.page-top-spacer { padding-top: 0.75rem; }
+
+/* ===== Hero ===== */
+.landing-hero {
+  color: #ffffff;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  padding-top: 3.75rem;
+  padding-bottom: 4.25rem;
+}
+
+/* extra gap after hero before main content begins */
+.landing-hero + .section-main {
+  padding-top: var(--hero-gap);
+}
+
+.landing-kicker {
+  color: var(--accent);
+  font-weight: 700;
+}
+.landing-title {
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.landing-muted {
+  color: var(--muted);
+  max-width: 46rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  margin-top: 1.25rem;
+}
+
+.btn-primary {
+  background: var(--accent2);
+  border: none;
+  color: #fff;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+.btn-primary:hover { filter: brightness(1.05); color: #fff; }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.92);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+.btn-outline:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+
+/* Theme button for "View Demo / View Paper / View Repo" */
+.btn-demo {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.92);
+  padding-left: 1.1rem;
+  padding-right: 1.1rem;
+}
+.btn-demo:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.10);
+  color: #fff;
+}
+
+.btn-cta {
+  opacity: 0.85;
+}
+.btn-cta:hover {
+  opacity: 1;
+}
+
+.icon-pill {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255,255,255,0.92);
+}
+.icon-pill:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.09);
+}
+.icon-pill img { width: 18px; height: 18px; }
+.icon-pill svg { display:block; } /* ensures SVG uses currentColor cleanly */
+
+.sparkle {
+  display: inline-block;
+  margin-left: 8px;
+  color: rgba(120, 160, 255, 0.9);
+}
+
+/* ===== Surfaces ===== */
+.box, .card, .footer {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+  color: var(--text);
+}
+.card .card-content { color: var(--muted); }
+
+.tag {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.88);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.tag.is-info {
+  background: rgba(70, 170, 255, 0.14);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(70, 170, 255, 0.22);
+}
+.tag.is-success {
+  background: rgba(72, 199, 142, 0.14);
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(72, 199, 142, 0.22);
+}
+.tag.is-warning {
+  background: rgba(255, 221, 87, 0.14);
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(255, 221, 87, 0.22);
+}
+.tag.is-link.is-light {
+  background: rgba(72, 95, 199, 0.16);
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(72, 95, 199, 0.22);
+}
+
+/* ===== Layout spacing ===== */
+.section { background: transparent; }
+.section.section-main { padding-bottom: var(--section-gap); }
+
+.section-block { margin-top: var(--section-gap); }
+.section-block:first-child { margin-top: 0; }
+
+.block-head { margin-bottom: 1.75rem; }
+.cards-stack > .card { margin-bottom: 1.5rem; }
+.cards-stack > .card:last-child { margin-bottom: 0; }
+
+.section-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: var(--section-gap) 0;
+}
+
+/* ===== Light-screen Modal (Google Doc / Drive PDF viewer) ===== */
+.modal-card {
+  background: rgba(10, 10, 14, 0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.modal-card-head, .modal-card-foot {
+  background: rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+.modal-card-title { color: #fff; }
+.modal-card-body {
+  background: rgba(10, 10, 14, 0.80);
+  padding: 0;
+}
+.modal-close::before, .modal-close::after { background-color: #fff; }
+
+.doc-frame {
+  width: 100%;
+  height: min(75vh, 760px);
+  border: 0;
+}
+.doc-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 12px 16px;
+}
+
+@media (max-width: 768px) {
+  :root{
+    --section-gap: var(--section-gap-sm);
+    --hero-gap: 2.75rem;
+  }
+  .landing-hero{
+    min-height: calc(92vh - 64px);
+    padding-top: 3.25rem;
+    padding-bottom: 3.5rem;
+  }
+  .doc-frame { height: 72vh; }
+}
+
+.footer {
+  background: rgba(10, 10, 14, 0.85);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.footer p { color: var(--muted); }
+
+.admin-login-modal .modal-card {
+  background: rgba(10, 10, 14, 0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+}
+
+.admin-login-modal .modal-card-body {
+  padding: 1.5rem 1.75rem;
+}
+
+.admin-login-modal .label,
+.admin-login-modal .title,
+.admin-login-modal .modal-card-title {
+  color: #fff;
+}
+
+.admin-login-modal .input {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.admin-login-modal .input:focus {
+  border-color: rgba(120, 160, 255, 0.6);
+  box-shadow: 0 0 0 0.1em rgba(120, 160, 255, 0.2);
+}
+
+/* ===== Contact Form ===== */
+.contact-form-wrapper {
+  margin-top: 1.5rem;
+}
+.contact-card .card-header {
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.contact-card .card-header-title {
+  color: rgba(255, 255, 255, 0.92);
+}
+.contact-form .label {
+  color: rgba(255, 255, 255, 0.9);
+}
+.contact-form .input,
+.contact-form .textarea {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.9);
+}
+.contact-form .input::placeholder,
+.contact-form .textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+.contact-form .input:focus,
+.contact-form .textarea:focus {
+  border-color: rgba(120, 160, 255, 0.6);
+  box-shadow: 0 0 0 0.1em rgba(120, 160, 255, 0.2);
+}
